@@ -1,0 +1,131 @@
+#include <Wire.h>
+#include <LiquidCrystal_I2C.h>
+#include <SoftwareSerial.h>
+
+// Define the RX and TX pins for SoftwareSerial
+#define RX_PIN 0// Arduino RX pin, Bluetooth TX pin
+#define TX_PIN 1 // Arduino TX pin, Bluetooth RX pin
+
+// Define LED pins
+#define LED_PIN_1 3
+#define LED_PIN_2 4
+#define LED_PIN_3 5
+#define LED_PIN_4 6
+#define LED_PIN_5 7
+#define LED_PIN_6 8
+
+// Define Bluetooth commands
+#define CMD_LED_1_ON '1'
+#define CMD_LED_1_OFF '2'
+#define CMD_LED_2_ON '3'
+#define CMD_LED_2_OFF '4'
+#define CMD_LED_3_ON '5'
+#define CMD_LED_3_OFF '6'
+#define CMD_LED_4_ON '7'
+#define CMD_LED_4_OFF '8'
+#define CMD_LED_5_ON '9'
+#define CMD_LED_5_OFF 'a'
+#define CMD_LED_6_ON 'b'
+#define CMD_LED_6_OFF 'c'
+
+// Create a SoftwareSerial object to communicate with the Bluetooth module
+SoftwareSerial bluetooth(RX_PIN, TX_PIN);
+
+// Initialize the LCD with the I2C address
+LiquidCrystal_I2C lcd(0x23, 16, 2);
+
+void setup() {
+  // Initialize LED pins as outputs
+  pinMode(LED_PIN_1, OUTPUT);
+  pinMode(LED_PIN_2, OUTPUT);
+  pinMode(LED_PIN_3, OUTPUT);
+  pinMode(LED_PIN_4, OUTPUT);
+  pinMode(LED_PIN_5, OUTPUT);
+  pinMode(LED_PIN_6, OUTPUT);
+
+  // Initialize serial communication for debugging
+  Serial.begin(9600);
+  
+  // Initialize serial communication with the Bluetooth module
+  bluetooth.begin(9600);
+
+  // Initialize the LCD
+  lcd.init();
+  lcd.backlight(); // Turn on the backlight
+  lcd.clear();     // Clear the LCD screen
+}
+
+void loop() {
+  // Check if data is available from the Bluetooth module
+  if (bluetooth.available()) {
+    // Read the incoming byte from the Bluetooth module
+    char receivedChar = bluetooth.read();
+    
+    // Print the received character for debugging
+    Serial.println(receivedChar);
+    
+    // Toggle LEDs based on received commands
+    switch (receivedChar) {
+      case CMD_LED_1_ON:
+        digitalWrite(LED_PIN_1, HIGH);
+        lcd.setCursor(0, 0);
+        lcd.print("LED 1: ON ");
+        break;
+      case CMD_LED_1_OFF:
+        digitalWrite(LED_PIN_1, LOW);
+        lcd.setCursor(0, 0);
+        lcd.print("LED 1: OFF");
+        break;
+      case CMD_LED_2_ON:
+        digitalWrite(LED_PIN_2, HIGH);
+        lcd.setCursor(0, 1);
+        lcd.print("LED 2: ON ");
+        break;
+      case CMD_LED_2_OFF:
+        digitalWrite(LED_PIN_2, LOW);
+        lcd.setCursor(0, 1);
+        lcd.print("LED 2: OFF");
+        break;
+      case CMD_LED_3_ON:
+        digitalWrite(LED_PIN_3, HIGH);
+        lcd.setCursor(0, 1);
+        lcd.print("LED 3: ON ");
+        break;
+      case CMD_LED_3_OFF:
+        digitalWrite(LED_PIN_3, LOW);
+        lcd.setCursor(0, 1);
+        lcd.print("LED 3: OFF");
+        break;
+      case CMD_LED_4_ON:
+        digitalWrite(LED_PIN_4, HIGH);
+        lcd.setCursor(0, 3);
+        lcd.print("LED 4: ON ");
+        break;
+      case CMD_LED_4_OFF:
+        digitalWrite(LED_PIN_4, LOW);
+        lcd.setCursor(0, 3);
+        lcd.print("LED 4: OFF");
+        break;
+      case CMD_LED_5_ON:
+        digitalWrite(LED_PIN_5, HIGH);
+        lcd.setCursor(0, 4);
+        lcd.print("LED 5: ON ");
+        break;
+      case CMD_LED_5_OFF:
+        digitalWrite(LED_PIN_5, LOW);
+        lcd.setCursor(0, 4);
+        lcd.print("LED 5: OFF");
+        break;
+      case CMD_LED_6_ON:
+        digitalWrite(LED_PIN_6, HIGH);
+        lcd.setCursor(0, 5);
+        lcd.print("LED 6: ON ");
+        break;
+      case CMD_LED_6_OFF:
+        digitalWrite(LED_PIN_6, LOW);
+        lcd.setCursor(0, 5);
+        lcd.print("LED 6: OFF");
+        break;
+    }
+  }
+}
